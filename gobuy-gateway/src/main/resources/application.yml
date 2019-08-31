@@ -1,0 +1,43 @@
+server:
+    port: 10010
+
+spring:
+    application:
+        name: gobuy-gateway
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://127.0.0.1:10086/eureka
+        registry-fetch-interval-seconds: 5
+    instance:
+        lease-renewal-interval-in-seconds: 5    # 每隔5秒发送一次心跳
+        lease-expiration-duration-in-seconds: 15    # 10秒不发送就过期
+
+
+zuul:
+    prefix: /api
+    routes:
+        api-item:
+            path: /item/**
+            serviceId: item-service
+        api-auth:
+            path: /auth/**
+            serviceId: auth-service
+        api-user:
+            path: /user/**
+            serviceId: user-service
+
+    retryable: true     # 重试
+
+    ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
+    host:
+        connect-timeout-millis: 5000
+        socket-timeout-millis: 5000
+
+
+ribbon:
+    restclient:
+        enabled: true
+    okhttp:
+        enabled: true

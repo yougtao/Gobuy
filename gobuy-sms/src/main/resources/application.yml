@@ -1,0 +1,19 @@
+server:
+    port: 8086
+
+spring:
+    application:
+        name: sms-service
+
+    rabbitmq:
+        host: 192.168.22.141
+        username: gobuy
+        password: gobuy
+        virtual-host: /gobuy
+
+gobuy:
+    sms:
+        accessKeyId: LTAItNxtDfk7MJMq
+        accessKeySecret: HKUID121ZM7XoubErXjUFJq84dha8W
+        signName: 乐优商城
+        verifyCodeTemplate: SMS_143714980

@@ -1,0 +1,13 @@
+.idea
+gobuy-auth/auth-common/target
+gobuy-auth/auth-service/target
+gobuy-common/target
+gobuy-common/gobuy-common.iml
+gobuy-gateway/target
+gobuy-gateway/gobuy-gateway.iml
+gobuy-item/item-interface/target
+gobuy-item/item-interface/item-service/target
+gobuy-registry/target
+gobuy-user/user-interface/target
+gobuy-user/user-service/target
+target
