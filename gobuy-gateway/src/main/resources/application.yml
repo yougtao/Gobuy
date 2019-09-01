@@ -41,3 +41,7 @@ ribbon:
         enabled: true
     okhttp:
         enabled: true
+
+    ReadTimeout: 6000
+    ConnectTimeout: 6000
+

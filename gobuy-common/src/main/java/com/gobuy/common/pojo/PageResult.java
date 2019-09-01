@@ -3,24 +3,31 @@ package com.gobuy.common.pojo;
 import java.util.List;
 
 public class PageResult<T> {
-    private Integer total;
-    private Integer totalpage;
+    private Long total;
+    private Integer totalPage;
     private List<T> items;
 
-    public Integer getTotal() {
+    public PageResult(com.github.pagehelper.Page<T> pageInfo) {
+        this.total = pageInfo.getTotal();
+        this.totalPage = pageInfo.getPageSize();
+        this.items = pageInfo.getResult();
+    }
+
+
+    public Long getTotal() {
         return total;
     }
 
-    public void setTotal(Integer total) {
+    public void setTotal(Long total) {
         this.total = total;
     }
 
-    public Integer getTotalpage() {
-        return totalpage;
+    public Integer getTotalPage() {
+        return totalPage;
     }
 
-    public void setTotalpage(Integer totalpage) {
-        this.totalpage = totalpage;
+    public void setTotalPage(Integer totalPage) {
+        this.totalPage = totalPage;
     }
 
     public List<T> getItems() {
