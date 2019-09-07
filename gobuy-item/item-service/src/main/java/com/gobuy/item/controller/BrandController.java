@@ -7,10 +7,7 @@ import com.gobuy.item.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,6 +18,10 @@ public class BrandController {
     @Autowired
     BrandService brandService;
 
+
+    /*
+     * 查询品牌
+     * */
     @GetMapping("page")
     public ResponseEntity<PageResult<Brand>> queryBrandByPage(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
@@ -35,9 +36,46 @@ public class BrandController {
             return ResponseEntity.ok(result);
     }
 
+    /*
+     * 根据category查询单个品牌信息
+     * */
+    @GetMapping("cid/{cid}")
+    public ResponseEntity<List<Brand>> queryBrand(@PathVariable("cid") Integer cid) {
+        List<Brand> list = brandService.queryBrand(cid);
+        if (list == null)
+            return ResponseEntity.notFound().build();
+        else
+            return ResponseEntity.ok(list);
+    }
+
+
+    /*
+     * 添加品牌
+     * */
     @PostMapping
-    public ResponseEntity<Boolean> addBrand(Brand brand, @RequestParam("categories") List<Long> cids) {
+    public ResponseEntity<Boolean> addBrand(Brand brand, @RequestParam("categories") List<Integer> cids) {
         Boolean bool = brandService.saveBrand(brand, cids);
+        return ResponseEntity.ok(bool);
+    }
+
+
+    /*
+     * 编辑保存品牌
+     * */
+    @PutMapping
+    public ResponseEntity<Boolean> editBrand(Brand brand, @RequestParam("categories") List<Integer> cids) {
+        Boolean bool = brandService.updateBrand(brand, cids);
+        return ResponseEntity.ok(bool);
+    }
+
+
+    /*
+     * 删除品牌
+     * */
+    @DeleteMapping("bid/{ids}")
+    public ResponseEntity<Boolean> deleteBrand(@PathVariable("ids") String ids) {
+        String[] strings = ids.split("-");
+        Boolean bool = brandService.deleteBrand(strings);
         return ResponseEntity.ok(bool);
     }
 

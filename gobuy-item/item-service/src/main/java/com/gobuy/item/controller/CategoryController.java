@@ -36,4 +36,12 @@ public class CategoryController {
         return ResponseEntity.ok(bool);
     }
 
+    @GetMapping("bid/{id}")
+    public ResponseEntity<List<Category>> queryByBrand(@PathVariable("id") Integer id) {
+        List<Category> categories = categoryService.queryByBrandId(id);
+        if (categories == null)
+            return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(categories);
+    }
+
 }

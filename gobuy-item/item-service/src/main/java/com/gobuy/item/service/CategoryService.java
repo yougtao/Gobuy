@@ -6,6 +6,7 @@ import com.gobuy.item.pojo.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,10 +24,23 @@ public class CategoryService {
     }
 
     public Boolean delete(int id) {
-        Category category = new Category();
-        int i = categoryMapper.delete(category);
+        return categoryMapper.deleteByPrimaryKey(id) == 1;
 
-        return i == 1;
     }
 
+    /*
+     * 根据品牌ID查询
+     * */
+    public List<Category> queryByBrandId(Integer id) {
+        return categoryMapper.queryByBrandId(id);
+    }
+
+
+    // 根据ids查询所属category name
+    public List<String> queryNameByIds(List<Integer> ids) {
+        List<String> lists = new ArrayList<>();
+        for (int i = 0; i < 3; i++)
+            lists.add(categoryMapper.queryName(ids.get(i)));
+        return lists;
+    }
 }

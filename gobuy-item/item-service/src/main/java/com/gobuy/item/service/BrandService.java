@@ -46,13 +46,52 @@ public class BrandService {
      * 保存Brand
      * */
     @Transactional
-    public Boolean saveBrand(Brand brand, List<Long> cids) {
+    public Boolean saveBrand(Brand brand, List<Integer> cids) {
         if (brandMapper.insertSelective(brand) != 1)
             return false;
 
-        for (Long cid : cids)
+        for (Integer cid : cids)
             brandMapper.insertCategoryAndBrand(cid, brand.getId());
         return true;
     }
 
+    // 更新brand
+    @Transactional
+    public Boolean updateBrand(Brand brand, List<Integer> cids) {
+        // 先更新brand信息
+        brandMapper.updateByPrimaryKeySelective(brand);
+        // 查询原先 牌子的类目
+        List<Integer> oldCategory = brandMapper.queryCategory(brand.getId());
+
+        // 删掉新 类目中没有的
+        for (Integer cate : oldCategory) {
+            if (!cids.contains(cate))
+                brandMapper.deleteCategory(cate, brand.getId());
+        }
+
+        // 取新-旧的差集
+        cids.removeAll(oldCategory);
+
+        // 添加进数据库
+        for (Integer cid : cids)
+            brandMapper.insertCategoryAndBrand(cid, brand.getId());
+
+        return true;
+    }
+
+    // 删除brand
+    @Transactional
+    public Boolean deleteBrand(String[] bids) {
+        for (String bid : bids) {
+            // 查询category
+            brandMapper.deleteByBrand(bid);
+            brandMapper.deleteByPrimaryKey(bid);
+        }
+        return true;
+    }
+
+    // 查询brand
+    public List<Brand> queryBrand(Integer cid) {
+        return brandMapper.queryBrandByCategory(cid);
+    }
 }

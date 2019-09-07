@@ -19,4 +19,4 @@ gobuy:
         pubKeyPath: D:\\tmp\\rsa.pub
         priKeyPath: D:\\tmp\\rsa.pri
         expire: 30  # 过期时间
-        cookie-name: gobuy-token
+        cookie-name: user-token

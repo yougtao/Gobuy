@@ -32,8 +32,8 @@ zuul:
 
     ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
     host:
-        connect-timeout-millis: 5000
-        socket-timeout-millis: 5000
+        connect-timeout-millis: 3000
+        socket-timeout-millis: 3000
 
 
 ribbon:
@@ -42,6 +42,6 @@ ribbon:
     okhttp:
         enabled: true
 
-    ReadTimeout: 6000
-    ConnectTimeout: 6000
+    ReadTimeout: 3000
+    ConnectTimeout: 3000
 
