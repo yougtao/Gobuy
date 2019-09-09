@@ -16,6 +16,8 @@ import com.gobuy.search.repository.GoodsRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -135,6 +137,12 @@ public class SearchService {
         int page = request.getPage();
         int size = request.getSize();
         queryBuilder.withPageable(PageRequest.of(page - 1, size));
+
+        // 排序
+        String sortBy = request.getSortBy();
+        Boolean desc = request.getDescending();
+        if (StringUtils.isNotBlank(sortBy))
+            queryBuilder.withSort(SortBuilders.fieldSort(sortBy).order(desc ? SortOrder.DESC : SortOrder.ASC));
 
         // 查询
         Page<Goods> pageInfo = goodsRepository.search(queryBuilder.build());
