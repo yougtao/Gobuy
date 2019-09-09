@@ -69,7 +69,7 @@ public class GoodsService {
         return new PageResult<>(pageInfo.getTotal(), list);
     }
 
-
+    // 单个spu详情
     public SpuBo querySpu(Integer id) {
         SpuBo spuBo = new SpuBo();
 
@@ -112,5 +112,18 @@ public class GoodsService {
 
         // 保存spuDetail
         return null;
+    }
+
+    // 根据spu id 查询sku
+    public List<Sku> querySkuBySpuId(Integer pid) {
+        Sku sku = new Sku();
+        sku.setSpuId(pid);
+
+        return skuMapper.select(sku);
+    }
+
+    // 查询spu detail
+    public SpuDetail querySpuDetail(Integer id) {
+        return spuDetailMapper.selectByPrimaryKey(id);
     }
 }// end

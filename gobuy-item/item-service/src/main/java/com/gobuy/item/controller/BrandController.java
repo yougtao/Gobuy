@@ -37,15 +37,26 @@ public class BrandController {
     }
 
     /*
-     * 根据category查询单个品牌信息
+     * 根据category查询品牌信息
      * */
     @GetMapping("cid/{cid}")
-    public ResponseEntity<List<Brand>> queryBrand(@PathVariable("cid") Integer cid) {
+    public ResponseEntity<List<Brand>> queryBrandsByCid(@PathVariable("cid") Integer cid) {
         List<Brand> list = brandService.queryBrand(cid);
         if (list == null)
             return ResponseEntity.notFound().build();
         else
             return ResponseEntity.ok(list);
+    }
+
+    /*
+     * 根据id查询brand
+     * */
+    @GetMapping("{bid}")
+    public ResponseEntity<Brand> queryBrand(@PathVariable("bid") Integer bid) {
+        Brand brand = brandService.queryBrandById(bid);
+        if (brand == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(brand);
     }
 
 

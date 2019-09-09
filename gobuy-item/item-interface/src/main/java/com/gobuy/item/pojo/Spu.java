@@ -111,4 +111,5 @@ public class Spu {
     public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
     }
+
 }

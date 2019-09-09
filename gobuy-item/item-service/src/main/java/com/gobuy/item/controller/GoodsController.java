@@ -2,12 +2,17 @@ package com.gobuy.item.controller;
 
 
 import com.gobuy.common.pojo.PageResult;
+import com.gobuy.item.pojo.Sku;
 import com.gobuy.item.pojo.SpuBo;
+import com.gobuy.item.pojo.SpuDetail;
+import com.gobuy.item.service.CategoryService;
 import com.gobuy.item.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /*
  * 商品相关的业务
@@ -18,6 +23,10 @@ public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
+    @Autowired
+    private CategoryService categoryService;
+
+
     @GetMapping("spu/page")
     public ResponseEntity<PageResult<SpuBo>> querySpuByPage(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
@@ -26,10 +35,9 @@ public class GoodsController {
             @RequestParam(value = "desc", defaultValue = "false") Boolean desc,
             @RequestParam(value = "key", required = false) String key,
             @RequestParam(value = "saleable", defaultValue = "true") Boolean saleable) {
-
         PageResult<SpuBo> result = goodsService.querySpuByPage(page, rows, sortBy, desc, key, saleable);
         if (result == null)
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.notFound().build();
         else
             return ResponseEntity.ok(result);
     }
@@ -43,9 +51,23 @@ public class GoodsController {
             return ResponseEntity.ok(result);
     }
 
-    /*
-     * 修改spu
-     * */
+    @GetMapping("spu/detail/{id}")
+    public ResponseEntity<SpuDetail> querySpuDetailById(@PathVariable("id") Integer id) {
+        SpuDetail spuDetail = goodsService.querySpuDetail(id);
+        if (spuDetail == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(spuDetail);
+    }
+
+    @GetMapping("sku/list")
+    public ResponseEntity<List<Sku>> querySkuBySpuId(@RequestParam("id") Integer id) {
+        List<Sku> skuList = goodsService.querySkuBySpuId(id);
+        if (skuList == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(skuList);
+    }
+
+
     @PutMapping
     public ResponseEntity<Boolean> editSpu(SpuBo spuBo) {
         Boolean bool = goodsService.edit(spuBo);

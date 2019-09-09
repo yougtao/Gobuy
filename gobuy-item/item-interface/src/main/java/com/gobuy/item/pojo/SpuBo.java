@@ -9,6 +9,10 @@ public class SpuBo extends Spu {
     private List<Sku> skuList;
     private SpuDetail spuDetail;
 
+
+    public SpuBo() {
+    }
+
     public String getCname() {
         return cname;
     }

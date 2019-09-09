@@ -20,9 +20,9 @@ public class Sku {
     private String ownSpec;
     private Integer enable;
 
-
     private Timestamp createTime;
     private Timestamp updateTime;
+
 
     public Long getId() {
         return id;

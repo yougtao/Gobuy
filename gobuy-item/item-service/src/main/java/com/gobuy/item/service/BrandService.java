@@ -94,4 +94,9 @@ public class BrandService {
     public List<Brand> queryBrand(Integer cid) {
         return brandMapper.queryBrandByCategory(cid);
     }
+
+    // 根据id查询brand
+    public Brand queryBrandById(Integer bid) {
+        return brandMapper.selectByPrimaryKey(bid);
+    }
 }

@@ -26,14 +26,12 @@ public class CategoryController {
         return ResponseEntity.ok(list);
     }
 
-
-    @DeleteMapping("cid/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable("id") Integer id) {
-        if (id == null)
-            return ResponseEntity.badRequest().build();
-
-        Boolean bool = categoryService.delete(id);
-        return ResponseEntity.ok(bool);
+    @GetMapping("names")
+    public ResponseEntity<List<String>> queryNameByIds(@RequestParam("ids") List<Integer> ids) {
+        List<String> list = categoryService.queryNameByIds(ids);
+        if (list == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("bid/{id}")
@@ -44,4 +42,13 @@ public class CategoryController {
         return ResponseEntity.ok(categories);
     }
 
-}
+    @DeleteMapping("cid/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable("id") Integer id) {
+        if (id == null)
+            return ResponseEntity.badRequest().build();
+
+        Boolean bool = categoryService.delete(id);
+        return ResponseEntity.ok(bool);
+    }
+
+}// end

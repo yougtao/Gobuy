@@ -41,6 +41,15 @@
     </properties>
 
 
+    <dependencies>
+        <!-- 热部署-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -86,9 +95,13 @@
     <build>
         <plugins>
             <plugin>
+                <!--热部署配置-->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.1.7.RELEASE</version>
+                <configuration>
+                    <!--fork:如果没有该项配置,整个devtools不会起作用-->
+                    <fork>true</fork>
+                </configuration>
             </plugin>
         </plugins>
     </build>

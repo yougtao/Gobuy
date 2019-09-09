@@ -7,6 +7,9 @@ public class PageResult<T> {
     private Integer totalPage;
     private List<T> items;
 
+    public PageResult() {
+    }
+
     public PageResult(com.github.pagehelper.Page<T> pageInfo) {
         this.total = pageInfo.getTotal();
         this.totalPage = pageInfo.getPageSize();
