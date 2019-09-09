@@ -27,13 +27,16 @@ zuul:
         api-user:
             path: /user/**
             serviceId: user-service
+        api-search:
+            path: /search/**
+            serviceId: search-service
 
     retryable: true     # 重试
 
     ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
     host:
-        connect-timeout-millis: 3000
-        socket-timeout-millis: 3000
+        connect-timeout-millis: 30000
+        socket-timeout-millis: 30000
 
 
 ribbon:
@@ -42,6 +45,6 @@ ribbon:
     okhttp:
         enabled: true
 
-    ReadTimeout: 3000
-    ConnectTimeout: 3000
+    ReadTimeout: 30000
+    ConnectTimeout: 30000
 

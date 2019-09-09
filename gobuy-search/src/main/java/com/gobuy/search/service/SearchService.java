@@ -2,6 +2,7 @@ package com.gobuy.search.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gobuy.common.pojo.PageResult;
 import com.gobuy.item.pojo.Brand;
 import com.gobuy.item.pojo.Sku;
 import com.gobuy.item.pojo.Spu;
@@ -10,8 +11,16 @@ import com.gobuy.search.client.BrandClient;
 import com.gobuy.search.client.CategoryClient;
 import com.gobuy.search.client.GoodsClient;
 import com.gobuy.search.pojo.Goods;
+import com.gobuy.search.pojo.SearchRequest;
+import com.gobuy.search.repository.GoodsRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,8 +37,11 @@ public class SearchService {
     @Autowired
     private GoodsClient goodsClient;
 
+    @Autowired
+    private GoodsRepository goodsRepository;
 
     private static final ObjectMapper mapper = new ObjectMapper();
+
 
     // 根据spu构建goods
     public Goods buildGoods(Spu spu) throws IOException {
@@ -103,6 +115,32 @@ public class SearchService {
         goods.setSkus(mapper.writeValueAsString(skuDetailList));
         goods.setSpecs(specMap);
         return goods;
+    }
+
+    // 搜索页面
+    public PageResult<Goods> search(SearchRequest request) {
+        String key = request.getKey();
+
+        if (StringUtils.isBlank(key))
+            return null;
+
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+
+        // 对key进行全文检索
+        queryBuilder.withQuery(QueryBuilders.matchQuery("all", key).operator(Operator.AND));
+        // 设置返回的结果字段
+        queryBuilder.withSourceFilter(new FetchSourceFilter(new String[]{"id", "skus", "subTitle"}, null));
+
+        // 分页
+        int page = request.getPage();
+        int size = request.getSize();
+        queryBuilder.withPageable(PageRequest.of(page - 1, size));
+
+        // 查询
+        Page<Goods> pageInfo = goodsRepository.search(queryBuilder.build());
+
+        return new PageResult<>(pageInfo.getTotalElements(), pageInfo.getTotalPages(), pageInfo.getContent());
+
     }
 
 }// end

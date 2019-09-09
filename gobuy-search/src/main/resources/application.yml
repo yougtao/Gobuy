@@ -10,6 +10,9 @@ spring:
             cluster-name: test-cluster
             cluster-nodes: 192.168.22.141:9300
 
+    jackson:
+        default-property-inclusion: non_null
+
     main:
         allow-bean-definition-overriding: true
 
