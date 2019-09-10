@@ -49,6 +49,18 @@ public class BrandController {
     }
 
     /*
+     * 根据ids查询brands
+     * */
+    @RequestMapping("list")
+    public ResponseEntity<List<Brand>> queryBrandsByIds(@RequestParam("ids") List<Integer> ids) {
+        List<Brand> list = brandService.queryBrandsByIds(ids);
+        if (list == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(list);
+    }
+
+
+    /*
      * 根据id查询brand
      * */
     @GetMapping("{bid}")
@@ -58,7 +70,6 @@ public class BrandController {
             return ResponseEntity.notFound().build();
         return ResponseEntity.ok(brand);
     }
-
 
     /*
      * 添加品牌

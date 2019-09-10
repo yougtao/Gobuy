@@ -19,7 +19,7 @@ public class CategoryClientTest {
 
     //@Test
     public void testQueryCategories() {
-        List<String> names = categoryClient.queryNameByIds(Arrays.asList(1, 2, 3)).getBody();
+        List<String> names = categoryClient.queryNameByIds(Arrays.asList(1, 2, 3));
         names.forEach(System.out::println);
     }
 

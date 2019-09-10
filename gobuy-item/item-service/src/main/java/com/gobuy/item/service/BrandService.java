@@ -41,10 +41,24 @@ public class BrandService {
         return new PageResult<>(pageInfo);
     }
 
+    // 查询brand
+    public List<Brand> queryBrand(Integer cid) {
+        return brandMapper.queryBrandByCategory(cid);
+    }
 
-    /*
-     * 保存Brand
-     * */
+    // 根据id查询brand
+    public Brand queryBrandById(Integer bid) {
+        return brandMapper.selectByPrimaryKey(bid);
+    }
+
+    // 查询brands
+    public List<Brand> queryBrandsByIds(List<Integer> ids) {
+        return brandMapper.selectByIdList(ids);
+
+    }
+
+
+    //保存Brand
     @Transactional
     public Boolean saveBrand(Brand brand, List<Integer> cids) {
         if (brandMapper.insertSelective(brand) != 1)
@@ -90,13 +104,6 @@ public class BrandService {
         return true;
     }
 
-    // 查询brand
-    public List<Brand> queryBrand(Integer cid) {
-        return brandMapper.queryBrandByCategory(cid);
-    }
 
-    // 根据id查询brand
-    public Brand queryBrandById(Integer bid) {
-        return brandMapper.selectByPrimaryKey(bid);
-    }
-}
+}// end
+

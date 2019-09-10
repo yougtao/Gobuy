@@ -5,11 +5,12 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import tk.mybatis.mapper.additional.idlist.SelectByIdListMapper;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
-public interface BrandMapper extends Mapper<Brand> {
+public interface BrandMapper extends Mapper<Brand>, SelectByIdListMapper<Brand, Integer> {
 
     @Insert("insert into category_brand(category_id, brand_id) VALUES(#{cid}, #{bid})")
     void insertCategoryAndBrand(@Param("cid") Integer cid, @Param("bid") Integer id);
@@ -25,4 +26,5 @@ public interface BrandMapper extends Mapper<Brand> {
 
     @Select("select id,name,image,letter from brand, category_brand where category_id = #{cid} and brand_id = id")
     List<Brand> queryBrandByCategory(Integer cid);
+
 }

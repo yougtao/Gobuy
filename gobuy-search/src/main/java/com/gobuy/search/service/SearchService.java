@@ -3,24 +3,25 @@ package com.gobuy.search.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gobuy.common.pojo.PageResult;
-import com.gobuy.item.pojo.Brand;
-import com.gobuy.item.pojo.Sku;
-import com.gobuy.item.pojo.Spu;
-import com.gobuy.item.pojo.SpuDetail;
+import com.gobuy.item.pojo.*;
 import com.gobuy.search.client.BrandClient;
 import com.gobuy.search.client.CategoryClient;
 import com.gobuy.search.client.GoodsClient;
 import com.gobuy.search.pojo.Goods;
 import com.gobuy.search.pojo.SearchRequest;
+import com.gobuy.search.pojo.SearchResult;
 import com.gobuy.search.repository.GoodsRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
@@ -50,7 +51,7 @@ public class SearchService {
         Goods goods = new Goods();
 
         // 查询商品分类名称
-        List<String> names = categoryClient.queryNameByIds(Arrays.asList(spu.getCid1(), spu.getCid2(), spu.getCid3())).getBody();
+        List<String> names = categoryClient.queryNameByIds(Arrays.asList(spu.getCid1(), spu.getCid2(), spu.getCid3()));
 
         // 品牌名称
         Brand brand = null;
@@ -144,11 +145,62 @@ public class SearchService {
         if (StringUtils.isNotBlank(sortBy))
             queryBuilder.withSort(SortBuilders.fieldSort(sortBy).order(desc ? SortOrder.DESC : SortOrder.ASC));
 
-        // 查询
-        Page<Goods> pageInfo = goodsRepository.search(queryBuilder.build());
+        // 聚合
+        String categoryAggName = "category";
+        String brandAggName = "brand";
 
-        return new PageResult<>(pageInfo.getTotalElements(), pageInfo.getTotalPages(), pageInfo.getContent());
+        // 对商品分类聚合
+        queryBuilder.addAggregation(AggregationBuilders.terms(categoryAggName).field("cid3"));
+        // 对品牌进行聚合
+        queryBuilder.addAggregation(AggregationBuilders.terms(brandAggName).field("brandId"));
 
+        // 查询, 获取聚合结果
+        AggregatedPage<Goods> pageInfo = (AggregatedPage<Goods>) goodsRepository.search(queryBuilder.build());
+
+        // 解析查询结果
+        long total = pageInfo.getTotalElements();
+        int totalPage = ((int) total + request.getSize() - 1) / request.getSize();
+        // 获取商品分类和品牌的聚合结果
+        List<Category> categories = getCategoryAggResult(pageInfo.getAggregation(categoryAggName));
+        List<Brand> brands = getBrandAggResult(pageInfo.getAggregation(brandAggName));
+
+        return new SearchResult(pageInfo.getTotalElements(), pageInfo.getTotalPages(), pageInfo.getContent(), categories, brands);
+    }
+
+
+    // 解析商品分类聚合结果
+    private List<Category> getCategoryAggResult(Aggregation aggregation) {
+        List<Category> categories = new ArrayList<>();
+        LongTerms categoryAgg = (LongTerms) aggregation;
+        List<Integer> cids = new ArrayList<>();
+
+        for (LongTerms.Bucket bucket : categoryAgg.getBuckets()) {
+            cids.add(bucket.getKeyAsNumber().intValue());
+        }
+
+        // 根据id查询分类名称
+        List<String> names = categoryClient.queryNameByIds(cids);
+
+        for (int i = 0; i < names.size(); i++) {
+            Category c = new Category();
+            c.setId(cids.get(i));
+            c.setName(names.get(i));
+            categories.add(c);
+        }
+        return categories;
+    }
+
+    // 解析品牌聚合结果
+    private List<Brand> getBrandAggResult(Aggregation aggregation) {
+        //List<Brand> brands = new ArrayList<>();
+        LongTerms brandAgg = (LongTerms) aggregation;
+        List<Integer> bids = new ArrayList<>();
+
+        for (LongTerms.Bucket bucket : brandAgg.getBuckets()) {
+            bids.add(bucket.getKeyAsNumber().intValue());
+        }
+
+        return brandClient.queryBrandByIds(bids);
     }
 
 }// end
