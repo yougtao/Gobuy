@@ -88,6 +88,17 @@ public class GoodsController {
             return ResponseEntity.ok(bool);
     }
 
+    // 上架 下架goods
+    @PutMapping("shelf/{id}")
+    public ResponseEntity<Boolean> soldGoods(@PathVariable("id") Integer id) {
+        Boolean bool = goodsService.shelf(id);
+        if (bool == null)
+            return ResponseEntity.badRequest().build();
+        else
+            return ResponseEntity.ok(bool);
+    }
+
+
     /*
      * 删除单个商品spu
      * */
@@ -99,5 +110,6 @@ public class GoodsController {
         else
             return ResponseEntity.ok(bool);
     }
+
 
 }// end

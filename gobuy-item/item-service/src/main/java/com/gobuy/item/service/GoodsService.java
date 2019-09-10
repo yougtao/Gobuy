@@ -175,11 +175,21 @@ public class GoodsService {
         Spu record = new Spu();
         record.setId(id);
         record.setValid(false);
-        spuMapper.updateByPrimaryKeySelective(record);
-        return true;
+        return spuMapper.updateByPrimaryKeySelective(record) == 1;
     }
 
-    // 下架
+    // 上架 下架
+    @Transactional
+    public Boolean shelf(Integer id) {
+        Spu record = spuMapper.selectByPrimaryKey(id);
+        if (record == null)
+            return null;
+
+        Spu spu = new Spu();
+        spu.setId(id);
+        spu.setSaleable(!record.getSaleable());
+        return spuMapper.updateByPrimaryKeySelective(spu) == 1;
+    }
 
 
 }// end
