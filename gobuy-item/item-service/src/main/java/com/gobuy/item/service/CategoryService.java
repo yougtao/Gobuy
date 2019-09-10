@@ -16,6 +16,7 @@ public class CategoryService {
     private CategoryMapper categoryMapper;
 
 
+    // 查询子分类
     public List<Category> queryByParentId(Integer id) {
         Category category = new Category();
         category.setParentId(id);
@@ -28,9 +29,7 @@ public class CategoryService {
 
     }
 
-    /*
-     * 根据品牌ID查询
-     * */
+    // 根据品牌ID查询
     public List<Category> queryByBrandId(Integer id) {
         return categoryMapper.queryByBrandId(id);
     }
@@ -43,4 +42,15 @@ public class CategoryService {
             lists.add(categoryMapper.queryName(id));
         return lists;
     }
-}
+
+    // 修改name
+    public Boolean edit(Integer id, String name) {
+        Category record = new Category();
+        record.setId(id);
+        record.setName(name);
+
+        categoryMapper.updateByPrimaryKeySelective(record);
+        return true;
+    }
+
+}// end

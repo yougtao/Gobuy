@@ -42,6 +42,22 @@ public class CategoryController {
         return ResponseEntity.ok(categories);
     }
 
+
+    @PostMapping
+    public ResponseEntity<Boolean> addCategory() {
+        return ResponseEntity.ok(true);
+    }
+
+
+    @PutMapping
+    public ResponseEntity<Boolean> editCategory(@RequestParam("id") Integer id, @RequestParam("name") String name) {
+        Boolean bool = categoryService.edit(id, name);
+        if (bool == null)
+            return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(bool);
+    }
+
+
     @DeleteMapping("cid/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable("id") Integer id) {
         if (id == null)

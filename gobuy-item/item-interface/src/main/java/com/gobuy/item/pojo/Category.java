@@ -13,7 +13,6 @@ public class Category {
     private Integer id;
     private String name;
     private Integer parentId;
-    private Boolean isParent;
     private Integer sort;
 
 
@@ -42,11 +41,7 @@ public class Category {
     }
 
     public Boolean getIsParent() {
-        return isParent;
-    }
-
-    public void setIsParent(Boolean parent) {
-        isParent = parent;
+        return id < 10000;
     }
 
     public Integer getSort() {
