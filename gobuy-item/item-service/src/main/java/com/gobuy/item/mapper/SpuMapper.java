@@ -21,4 +21,9 @@ public interface SpuMapper extends Mapper<Spu> {
     // 移除某个brand信息
     @Update("update spu set brand_id = null where brand_id = #{bid}")
     void removeBrand(Integer bid);
+
+
+    // 下架物品
+    @Update("update spu set saleable = 0 where id in ( ${ids} )")
+    void shelfAll(@Param("ids") String ids);
 }

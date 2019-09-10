@@ -80,7 +80,7 @@ public class GoodsController {
      * 修改商品信息spu
      * */
     @PutMapping
-    public ResponseEntity<Boolean> editSpu(SpuBo spuBo) {
+    public ResponseEntity<Boolean> editSpu(@RequestBody SpuBo spuBo) {
         Boolean bool = goodsService.edit(spuBo);
         if (bool == null)
             return ResponseEntity.badRequest().build();
@@ -92,6 +92,16 @@ public class GoodsController {
     @PutMapping("shelf/{id}")
     public ResponseEntity<Boolean> soldGoods(@PathVariable("id") Integer id) {
         Boolean bool = goodsService.shelf(id);
+        if (bool == null)
+            return ResponseEntity.badRequest().build();
+        else
+            return ResponseEntity.ok(bool);
+    }
+
+    // 上架 下架goods
+    @PutMapping("shelf-all/{id}")
+    public ResponseEntity<Boolean> soldAllGoods(@PathVariable("id") String string, @RequestParam(value = "shelf", defaultValue = "true") Boolean shelf) {
+        Boolean bool = goodsService.shelfAll(string, shelf);
         if (bool == null)
             return ResponseEntity.badRequest().build();
         else

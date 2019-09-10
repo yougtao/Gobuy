@@ -106,21 +106,6 @@ public class GoodsService {
         return spuBo;
     }
 
-    // 编辑spu
-    public Boolean edit(SpuBo spuBo) {
-        Spu spu = new Spu();
-        BeanUtils.copyProperties(spuBo, spu);
-
-        // 保存spu
-        spuMapper.updateByPrimaryKeySelective(spu);
-
-        // 保存sku信息
-
-
-        // 保存spuDetail
-        return null;
-    }
-
     // 根据spu id 查询sku
     public List<Sku> querySkuBySpuId(Integer pid) {
         Sku sku = new Sku();
@@ -134,12 +119,14 @@ public class GoodsService {
         return spuDetailMapper.selectByPrimaryKey(id);
     }
 
+
     // 添加商品
     @Transactional
     public Boolean addGoods(SpuBo spuBo) {
-        // 保存spu
         Calendar calendar = Calendar.getInstance();
         Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+
+        // 保存spu
         spuBo.setCreateTime(timestamp);
         spuBo.setUpdateTime(timestamp);
         spuMapper.insertSelective(spuBo);
@@ -171,6 +158,48 @@ public class GoodsService {
         return true;
     }
 
+
+    // 编辑spu
+    @Transactional
+    public Boolean edit(SpuBo spuBo) {
+        Spu spu = new Spu();
+        BeanUtils.copyProperties(spuBo, spu);
+
+        Calendar calendar = Calendar.getInstance();
+        Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+
+        // 保存spu
+        spuMapper.updateByPrimaryKeySelective(spu);
+
+        // 保存spuDetail
+        spuBo.getSpuDetail().setSpuId(spuBo.getId());
+        spuDetailMapper.updateByPrimaryKeySelective(spuBo.getSpuDetail());
+
+        // 保存sku信息
+        List<Sku> skus = spuBo.getSkus();
+        skus.forEach(sku -> {
+            sku.setSpuId(spuBo.getId());
+            sku.setCreateTime(timestamp);
+            sku.setUpdateTime(timestamp);
+
+            Integer stock_num = sku.getStock();
+            sku.setStock(null);
+
+            // 保存skus信息
+            skuMapper.updateByPrimaryKeySelective(sku);
+
+            // 保存skus库存信息
+            Stock stock = new Stock();
+            stock.setSku_id(sku.getId());
+            stock.setStock(stock_num);
+            stockMapper.updateByPrimaryKeySelective(stock);
+        });
+
+
+        return null;
+    }
+
+
     // 单个删除goods, 即将valid字段设为0
     public Boolean delete(Integer id) {
         Spu record = new Spu();
@@ -192,5 +221,9 @@ public class GoodsService {
         return spuMapper.updateByPrimaryKeySelective(spu) == 1;
     }
 
-
+    @Transactional
+    public Boolean shelfAll(String ids, Boolean shelf) {
+        spuMapper.shelfAll(ids);
+        return true;
+    }
 }// end
