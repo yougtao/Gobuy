@@ -23,6 +23,7 @@
         <module>gobuy-auth</module>
         <module>gobuy-upload</module>
         <module>gobuy-search</module>
+        <module>gobuy-cart</module>
     </modules>
 
     <name>gobuy</name>
