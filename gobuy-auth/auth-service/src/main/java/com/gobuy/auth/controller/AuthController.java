@@ -2,7 +2,9 @@ package com.gobuy.auth.controller;
 
 
 import com.gobuy.auth.config.AuthProperties;
+import com.gobuy.auth.entity.UserInfo;
 import com.gobuy.auth.service.AuthService;
+import com.gobuy.auth.utils.JwtUtils;
 import com.gobuy.common.utils.CookieUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,8 +51,15 @@ public class AuthController {
      * 验证
      * */
     @RequestMapping("verify")
-    public ResponseEntity<Void> verify() {
+    public ResponseEntity<UserInfo> verify(@CookieValue("user-identity") String token) {
 
-        return ResponseEntity.ok().build();
+        try {
+            UserInfo userInfo = JwtUtils.getInfoFromToken(token, authProperties.getPublicKey());
+            return ResponseEntity.ok(userInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
-}
+
+}// end
