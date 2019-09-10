@@ -5,9 +5,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.gobuy.common.pojo.PageResult;
 import com.gobuy.item.mapper.BrandMapper;
+import com.gobuy.item.mapper.SpuMapper;
 import com.gobuy.item.pojo.Brand;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -17,8 +17,14 @@ import java.util.List;
 @Service
 public class BrandService {
 
-    @Autowired
-    BrandMapper brandMapper;
+    private final BrandMapper brandMapper;
+    private final SpuMapper spuMapper;
+
+    public BrandService(BrandMapper brandMapper, SpuMapper spuMapper) {
+        this.brandMapper = brandMapper;
+        this.spuMapper = spuMapper;
+    }
+
 
     public PageResult<Brand> queryBrandByPage(Integer page, Integer rows, String sortBy, Boolean desc, String key) {
         // 分页
@@ -41,7 +47,7 @@ public class BrandService {
         return new PageResult<>(pageInfo);
     }
 
-    // 查询brand
+    // 查询brands
     public List<Brand> queryBrand(Integer cid) {
         return brandMapper.queryBrandByCategory(cid);
     }
@@ -54,7 +60,6 @@ public class BrandService {
     // 查询brands
     public List<Brand> queryBrandsByIds(List<Integer> ids) {
         return brandMapper.selectByIdList(ids);
-
     }
 
 
@@ -93,13 +98,27 @@ public class BrandService {
         return true;
     }
 
-    // 删除brand
+    // 删除单个brand
     @Transactional
-    public Boolean deleteBrand(String[] bids) {
+    public Boolean deleteBrand(Integer bid) {
+        // 删除brand
+        brandMapper.deleteByPrimaryKey(bid);
+        // 删除关联的category
+        brandMapper.deleteByBrand(bid);
+        // 删除spu中的brand信息
+        spuMapper.removeBrand(bid);
+        return true;
+    }
+
+    // 删除多个brand
+    @Transactional
+    public Boolean deleteBrands(String[] bids) {
         for (String bid : bids) {
             // 查询category
-            brandMapper.deleteByBrand(bid);
+            brandMapper.deleteByBrand(Integer.valueOf(bid));
             brandMapper.deleteByPrimaryKey(bid);
+            // 删除spu中的brand信息
+            spuMapper.removeBrand(Integer.valueOf(bid));
         }
         return true;
     }

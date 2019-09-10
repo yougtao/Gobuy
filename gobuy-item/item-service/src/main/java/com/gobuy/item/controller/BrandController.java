@@ -4,7 +4,6 @@ package com.gobuy.item.controller;
 import com.gobuy.common.pojo.PageResult;
 import com.gobuy.item.pojo.Brand;
 import com.gobuy.item.service.BrandService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +14,11 @@ import java.util.List;
 @RequestMapping("brand")
 public class BrandController {
 
-    @Autowired
-    BrandService brandService;
+    private final BrandService brandService;
+
+    public BrandController(BrandService brandService) {
+        this.brandService = brandService;
+    }
 
 
     /*
@@ -92,12 +94,21 @@ public class BrandController {
 
 
     /*
-     * 删除品牌
+     * 删除单个品牌 /brand/{id}
      * */
-    @DeleteMapping("bid/{ids}")
-    public ResponseEntity<Boolean> deleteBrand(@PathVariable("ids") String ids) {
+    @DeleteMapping("all/{ids}")
+    public ResponseEntity<Boolean> deleteBrands(@PathVariable("ids") String ids) {
         String[] strings = ids.split("-");
-        Boolean bool = brandService.deleteBrand(strings);
+        Boolean bool = brandService.deleteBrands(strings);
+        return ResponseEntity.ok(bool);
+    }
+
+    /*
+     * 删除brands
+     * */
+    @DeleteMapping("{bid}")
+    public ResponseEntity<Boolean> deleteBrand(@PathVariable("bid") Integer bid) {
+        Boolean bool = brandService.deleteBrand(bid);
         return ResponseEntity.ok(bool);
     }
 

@@ -22,7 +22,7 @@ public interface BrandMapper extends Mapper<Brand>, SelectByIdListMapper<Brand, 
     void deleteCategory(Integer cid, Integer bid);
 
     @Delete("delete from category_brand where brand_id = #{bid}")
-    void deleteByBrand(String bid);
+    void deleteByBrand(Integer bid);
 
     @Select("select id,name,image,letter from brand, category_brand where category_id = #{cid} and brand_id = id")
     List<Brand> queryBrandByCategory(Integer cid);

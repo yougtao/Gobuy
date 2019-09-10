@@ -39,8 +39,8 @@ public class CategoryService {
     // 根据ids查询所属category name
     public List<String> queryNameByIds(List<Integer> ids) {
         List<String> lists = new ArrayList<>();
-        for (int i = 0; i < 3; i++)
-            lists.add(categoryMapper.queryName(ids.get(i)));
+        for (Integer id : ids)
+            lists.add(categoryMapper.queryName(id));
         return lists;
     }
 }

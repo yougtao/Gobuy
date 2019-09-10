@@ -48,6 +48,6 @@ ribbon:
     okhttp:
         enabled: true
 
-    ReadTimeout: 30000
-    ConnectTimeout: 30000
+    ReadTimeout: 6000
+    ConnectTimeout: 6000
 

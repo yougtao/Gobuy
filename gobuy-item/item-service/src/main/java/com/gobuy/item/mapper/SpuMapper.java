@@ -17,4 +17,8 @@ public interface SpuMapper extends Mapper<Spu> {
 
     @Select("select spu_id from spu_detail")
     List<Integer> getIds();
+
+    // 移除某个brand信息
+    @Update("update spu set brand_id = null where brand_id = #{bid}")
+    void removeBrand(Integer bid);
 }
