@@ -35,8 +35,11 @@ zuul:
 
     ignored-headers: Access-Control-Allow-Credentials, Access-Control-Allow-Origin
     host:
-        connect-timeout-millis: 30000
-        socket-timeout-millis: 30000
+        connect-timeout-millis: 6000
+        socket-timeout-millis: 6000
+
+    sensitive-headers:      # 配置禁止使用的的头信息
+    add-host-header: true
 
 
 ribbon:

@@ -18,5 +18,5 @@ gobuy:
         secret: login@Gobuy(Auth)78&*^31jflkJjfi&23%
         pubKeyPath: D:\\tmp\\rsa.pub
         priKeyPath: D:\\tmp\\rsa.pri
-        expire: 30  # 过期时间
+        expire: 1440  # 过期时间
         cookie-name: user-token

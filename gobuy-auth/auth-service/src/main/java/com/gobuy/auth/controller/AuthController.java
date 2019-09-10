@@ -4,8 +4,10 @@ package com.gobuy.auth.controller;
 import com.gobuy.auth.config.AuthProperties;
 import com.gobuy.auth.service.AuthService;
 import com.gobuy.common.utils.CookieUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,19 +27,26 @@ public class AuthController {
     @Autowired
     private AuthProperties authProperties;
 
+    /*
+     * 登录
+     * */
     @PostMapping("accredit")
     public ResponseEntity<Boolean> accredit(@RequestParam("username") String username, @RequestParam("password") String password,
                                             HttpServletRequest request, HttpServletResponse response) {
         String token = authService.accredit(username, password);
 
-        if (token == null)
-            return ResponseEntity.badRequest().build();
+        if (StringUtils.isBlank(token))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         CookieUtils.setCookie(request, response, authProperties.getCookieName(), token, authProperties.getExpire() * 60);
 
         return ResponseEntity.ok(true);
     }
 
+
+    /*
+     * 验证
+     * */
     @RequestMapping("verify")
     public ResponseEntity<Void> verify() {
 
