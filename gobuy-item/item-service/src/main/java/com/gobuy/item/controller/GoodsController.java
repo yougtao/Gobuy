@@ -28,13 +28,9 @@ public class GoodsController {
 
 
     @GetMapping("spu/page")
-    public ResponseEntity<PageResult<SpuBo>> querySpuByPage(
-            @RequestParam(value = "page", defaultValue = "1") Integer page,
-            @RequestParam(value = "rows", defaultValue = "5") Integer rows,
-            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy,
-            @RequestParam(value = "desc", defaultValue = "false") Boolean desc,
-            @RequestParam(value = "key", required = false) String key,
-            @RequestParam(value = "saleable", defaultValue = "true") Boolean saleable) {
+    public ResponseEntity<PageResult<SpuBo>> querySpuByPage(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "rows", defaultValue = "5") Integer rows,
+                                                            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy, @RequestParam(value = "desc", defaultValue = "false") Boolean desc,
+                                                            @RequestParam(value = "key", required = false) String key, @RequestParam(value = "saleable", defaultValue = "true") Boolean saleable) {
         PageResult<SpuBo> result = goodsService.querySpuByPage(page, rows, sortBy, desc, key, saleable);
         if (result == null)
             return ResponseEntity.notFound().build();
@@ -69,7 +65,7 @@ public class GoodsController {
 
 
     /*
-     * 添加商品
+     * 添加商品spu
      * */
     @PostMapping
     public ResponseEntity<Boolean> addGoods(@RequestBody SpuBo spuBo) {
@@ -81,7 +77,7 @@ public class GoodsController {
 
 
     /*
-     * 修改商品信息
+     * 修改商品信息spu
      * */
     @PutMapping
     public ResponseEntity<Boolean> editSpu(SpuBo spuBo) {
@@ -91,4 +87,17 @@ public class GoodsController {
         else
             return ResponseEntity.ok(bool);
     }
-}
+
+    /*
+     * 删除单个商品spu
+     * */
+    @DeleteMapping("{id}")
+    public ResponseEntity<Boolean> deleteGoods(@PathVariable("id") Integer id) {
+        Boolean bool = goodsService.delete(id);
+        if (bool == null)
+            return ResponseEntity.badRequest().build();
+        else
+            return ResponseEntity.ok(bool);
+    }
+
+}// end

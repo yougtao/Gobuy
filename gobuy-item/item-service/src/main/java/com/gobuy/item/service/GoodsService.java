@@ -41,7 +41,7 @@ public class GoodsService {
     private StockMapper stockMapper;
 
 
-    // 查询spu
+    // 分页查询goods
     public PageResult<SpuBo> querySpuByPage(Integer page, Integer rows, String sortBy, Boolean desc, String key, Boolean saleable) {
         // 设置分页
         PageHelper.startPage(page, Math.min(rows, 100));
@@ -49,8 +49,11 @@ public class GoodsService {
         Example example = new Example(Spu.class);
         Example.Criteria criteria = example.createCriteria();
 
+        // 过滤已删除
+        criteria.andEqualTo("valid", true);
+
         // 过滤上下架
-        criteria.orEqualTo("saleable", saleable);
+        criteria.andEqualTo("saleable", saleable);
 
         // 模糊查询
         if (StringUtils.isNotBlank(key))
@@ -166,6 +169,17 @@ public class GoodsService {
         });
         return true;
     }
+
+    // 单个删除goods, 即将valid字段设为0
+    public Boolean delete(Integer id) {
+        Spu record = new Spu();
+        record.setId(id);
+        record.setValid(false);
+        spuMapper.updateByPrimaryKeySelective(record);
+        return true;
+    }
+
+    // 下架
 
 
 }// end
