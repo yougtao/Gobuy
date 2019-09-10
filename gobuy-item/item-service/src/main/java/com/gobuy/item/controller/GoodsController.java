@@ -30,7 +30,7 @@ public class GoodsController {
     @GetMapping("spu/page")
     public ResponseEntity<PageResult<SpuBo>> querySpuByPage(@RequestParam(value = "page", defaultValue = "1") Integer page, @RequestParam(value = "rows", defaultValue = "5") Integer rows,
                                                             @RequestParam(value = "sortBy", defaultValue = "id") String sortBy, @RequestParam(value = "desc", defaultValue = "false") Boolean desc,
-                                                            @RequestParam(value = "key", required = false) String key, @RequestParam(value = "saleable", defaultValue = "true") Boolean saleable) {
+                                                            @RequestParam(value = "key", required = false) String key, @RequestParam(value = "saleable", required = false) Boolean saleable) {
         PageResult<SpuBo> result = goodsService.querySpuByPage(page, rows, sortBy, desc, key, saleable);
         if (result == null)
             return ResponseEntity.notFound().build();

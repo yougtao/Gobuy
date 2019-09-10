@@ -53,7 +53,8 @@ public class GoodsService {
         criteria.andEqualTo("valid", true);
 
         // 过滤上下架
-        criteria.andEqualTo("saleable", saleable);
+        if (saleable != null)
+            criteria.andEqualTo("saleable", saleable);
 
         // 模糊查询
         if (StringUtils.isNotBlank(key))
