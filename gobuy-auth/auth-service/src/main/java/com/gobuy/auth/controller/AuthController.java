@@ -7,7 +7,6 @@ import com.gobuy.auth.service.AuthService;
 import com.gobuy.auth.utils.JwtUtils;
 import com.gobuy.common.utils.CookieUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +23,14 @@ import javax.servlet.http.HttpServletResponse;
 @EnableConfigurationProperties(AuthProperties.class)
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+    private final AuthProperties authProperties;
 
-    @Autowired
-    private AuthProperties authProperties;
+    public AuthController(AuthService authService, AuthProperties authProperties) {
+        this.authService = authService;
+        this.authProperties = authProperties;
+    }
+
 
     /*
      * 登录
@@ -51,10 +53,15 @@ public class AuthController {
      * 验证
      * */
     @RequestMapping("verify")
-    public ResponseEntity<UserInfo> verify(@CookieValue("user-identity") String token) {
+    public ResponseEntity<UserInfo> verify(@CookieValue("user-identity") String token, HttpServletRequest request, HttpServletResponse response) {
 
         try {
             UserInfo userInfo = JwtUtils.getInfoFromToken(token, authProperties.getPublicKey());
+
+            // 重新生成并更新token
+            token = JwtUtils.generateToken(userInfo, authProperties.getPrivateKey(), authProperties.getExpire());
+            CookieUtils.setCookie(request, response, authProperties.getCookieName(), token, authProperties.getExpire() * 60);
+
             return ResponseEntity.ok(userInfo);
         } catch (Exception e) {
             e.printStackTrace();
