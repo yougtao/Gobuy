@@ -68,6 +68,21 @@ public class GoodsController {
     }
 
 
+    /*
+     * 添加商品
+     * */
+    @PostMapping
+    public ResponseEntity<Boolean> addGoods(@RequestBody SpuBo spuBo) {
+        Boolean bool = goodsService.addGoods(spuBo);
+        if (bool == null)
+            return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(bool);
+    }
+
+
+    /*
+     * 修改商品信息
+     * */
     @PutMapping
     public ResponseEntity<Boolean> editSpu(SpuBo spuBo) {
         Boolean bool = goodsService.edit(spuBo);

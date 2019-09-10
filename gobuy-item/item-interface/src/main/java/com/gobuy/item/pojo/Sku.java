@@ -18,10 +18,13 @@ public class Sku {
     private Integer price;
     private String indexes;
     private String ownSpec;
-    private Integer enable;
+    private Boolean enable;
 
     private Timestamp createTime;
     private Timestamp updateTime;
+
+    // 扩展部分
+    private Integer stock;
 
 
     public Long getId() {
@@ -80,11 +83,11 @@ public class Sku {
         this.ownSpec = ownSpec;
     }
 
-    public Integer getEnable() {
+    public Boolean getEnable() {
         return enable;
     }
 
-    public void setEnable(Integer enable) {
+    public void setEnable(Boolean enable) {
         this.enable = enable;
     }
 
@@ -102,5 +105,15 @@ public class Sku {
 
     public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
+    }
+
+    /* 扩展部分
+     * */
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 }

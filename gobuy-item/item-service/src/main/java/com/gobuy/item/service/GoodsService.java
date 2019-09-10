@@ -4,18 +4,18 @@ package com.gobuy.item.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.gobuy.common.pojo.PageResult;
-import com.gobuy.item.mapper.BrandMapper;
-import com.gobuy.item.mapper.SkuMapper;
-import com.gobuy.item.mapper.SpuDetailMapper;
-import com.gobuy.item.mapper.SpuMapper;
+import com.gobuy.item.mapper.*;
 import com.gobuy.item.pojo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,10 +23,10 @@ import java.util.stream.Collectors;
 public class GoodsService {
 
     @Autowired
-    private SpuMapper spuMapper;
+    private CategoryService categoryService;
 
     @Autowired
-    private CategoryService categoryService;
+    private SpuMapper spuMapper;
 
     @Autowired
     private BrandMapper brandMapper;
@@ -36,6 +36,9 @@ public class GoodsService {
 
     @Autowired
     private SpuDetailMapper spuDetailMapper;
+
+    @Autowired
+    private StockMapper stockMapper;
 
 
     // 查询spu
@@ -126,4 +129,43 @@ public class GoodsService {
     public SpuDetail querySpuDetail(Integer id) {
         return spuDetailMapper.selectByPrimaryKey(id);
     }
+
+    // 添加商品
+    @Transactional
+    public Boolean addGoods(SpuBo spuBo) {
+        // 保存spu
+        Calendar calendar = Calendar.getInstance();
+        Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+        spuBo.setCreateTime(timestamp);
+        spuBo.setUpdateTime(timestamp);
+        spuMapper.insertSelective(spuBo);
+
+        // 保存spuDetail
+        SpuDetail spuDetail = spuBo.getSpuDetail();
+        spuDetail.setSpuId(spuBo.getId());
+        spuDetailMapper.insert(spuDetail);
+
+        // 保存skus
+        List<Sku> skus = spuBo.getSkus();
+        skus.forEach(sku -> {
+            sku.setSpuId(spuBo.getId());
+            sku.setCreateTime(timestamp);
+            sku.setUpdateTime(timestamp);
+
+            Integer stock_num = sku.getStock();
+            sku.setStock(null);
+
+            // 保存skus信息
+            skuMapper.insertSelective(sku);
+
+            // 保存skus库存信息
+            Stock stock = new Stock();
+            stock.setSku_id(sku.getId());
+            stock.setStock(stock_num);
+            stockMapper.insert(stock);
+        });
+        return true;
+    }
+
+
 }// end
