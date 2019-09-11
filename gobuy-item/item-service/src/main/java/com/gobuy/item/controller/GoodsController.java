@@ -63,10 +63,16 @@ public class GoodsController {
         return ResponseEntity.ok(skuList);
     }
 
+    @GetMapping("sku/{id}")
+    public ResponseEntity<Sku> querySku(@PathVariable("id") Long id) {
+        Sku sku = goodsService.querySku(id);
+        if (sku == null)
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(sku);
+    }
 
-    /*
-     * 添加商品spu
-     * */
+
+    //添加商品spu
     @PostMapping
     public ResponseEntity<Boolean> addGoods(@RequestBody SpuBo spuBo) {
         Boolean bool = goodsService.addGoods(spuBo);
@@ -76,12 +82,10 @@ public class GoodsController {
     }
 
 
-    /*
-     * 修改商品信息spu
-     * */
+    // 修改商品信息spu
     @PutMapping
-    public ResponseEntity<Boolean> editSpu(@RequestBody SpuBo spuBo) {
-        Boolean bool = goodsService.edit(spuBo);
+    public ResponseEntity<Boolean> editGoods(@RequestBody SpuBo spuBo) {
+        Boolean bool = goodsService.editGoods(spuBo);
         if (bool == null)
             return ResponseEntity.badRequest().build();
         else
@@ -109,9 +113,7 @@ public class GoodsController {
     }
 
 
-    /*
-     * 删除单个商品spu
-     * */
+    // 删除单个商品spu
     @DeleteMapping("{id}")
     public ResponseEntity<Boolean> deleteGoods(@PathVariable("id") Integer id) {
         Boolean bool = goodsService.delete(id);

@@ -106,7 +106,12 @@ public class GoodsService {
         return spuBo;
     }
 
-    // 根据spu id 查询sku
+    // 查询spu detail
+    public SpuDetail querySpuDetail(Integer id) {
+        return spuDetailMapper.selectByPrimaryKey(id);
+    }
+
+    // 根据spu id 查询skus
     public List<Sku> querySkuBySpuId(Integer pid) {
         Sku sku = new Sku();
         sku.setSpuId(pid);
@@ -114,11 +119,10 @@ public class GoodsService {
         return skuMapper.select(sku);
     }
 
-    // 查询spu detail
-    public SpuDetail querySpuDetail(Integer id) {
-        return spuDetailMapper.selectByPrimaryKey(id);
+    // 查询sku
+    public Sku querySku(Long id) {
+        return skuMapper.selectByPrimaryKey(id);
     }
-
 
     // 添加商品
     @Transactional
@@ -161,7 +165,7 @@ public class GoodsService {
 
     // 编辑spu
     @Transactional
-    public Boolean edit(SpuBo spuBo) {
+    public Boolean editGoods(SpuBo spuBo) {
         Spu spu = new Spu();
         BeanUtils.copyProperties(spuBo, spu);
 
@@ -226,4 +230,5 @@ public class GoodsService {
         spuMapper.shelfAll(ids);
         return true;
     }
+
 }// end

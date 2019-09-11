@@ -18,18 +18,21 @@ eureka:
 zuul:
     prefix: /api
     routes:
-        api-item:
+        api-item:   # 商品服务
             path: /item/**
             serviceId: item-service
-        api-auth:
+        api-auth:   # 验证服务
             path: /auth/**
             serviceId: auth-service
-        api-user:
+        api-user:   # 用户服务
             path: /user/**
             serviceId: user-service
-        api-search:
+        api-search: # 搜索服务
             path: /search/**
             serviceId: search-service
+        api-cart:   # 购物车
+            path: /cart/**
+            serviceId: cart-service
 
     retryable: true     # 重试
 

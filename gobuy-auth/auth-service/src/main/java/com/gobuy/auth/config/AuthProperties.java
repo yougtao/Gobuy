@@ -2,14 +2,13 @@ package com.gobuy.auth.config;
 
 import com.gobuy.auth.utils.RsaUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-@Component
+
 @ConfigurationProperties(prefix = "gobuy.auth-jwt")
 public class AuthProperties {
     private String secret;

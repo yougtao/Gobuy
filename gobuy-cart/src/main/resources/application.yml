@@ -17,3 +17,8 @@ eureka:
     instance:
         lease-renewal-interval-in-seconds: 5    # 心跳时间
         lease-expiration-duration-in-seconds: 15    # 过期时间
+
+gobuy:
+    jwt:
+        pubKeyPath: D:/tmp/rsa.pub     # 公钥地址
+        cookieName: user-identity    # cookie的名称
