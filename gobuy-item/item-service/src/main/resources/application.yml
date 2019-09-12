@@ -6,7 +6,7 @@ spring:
         name: item-service
 
     datasource:
-        url: jdbc:mysql://192.168.22.137/gobuy?useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://192.168.22.137/gobuy?useUnicode=true&characterEncoding=utf8&useTimezone=true&serverTimezone=GMT%2B8
         driver-class-name: com.mysql.cj.jdbc.Driver
         username: gobuy
         password: gobuy
@@ -23,4 +23,17 @@ eureka:
         lease-expiration-duration-in-seconds: 15    # 过期时间
 
 
+gobuy:
+    worker:
+        workerId: 1
+        datacenterId: 1
+    jwt:
+        pubKeyPath: D:/tmp/rsa.pub
+        cookieName: user-identity
+    pay:
+        appId: wx
+        mchId:
+        key: T6m
+        connectTimeoutMs: 5000
+        readTimeoutMs: 10000
 

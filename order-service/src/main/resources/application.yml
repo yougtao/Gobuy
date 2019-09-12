@@ -1,0 +1,48 @@
+server:
+    port: 8089
+
+spring:
+    application:
+        name: order-service
+
+    datasource:
+        url: jdbc:mysql://192.168.22.137:3306/gobuy?characterEncoding=utf8&autoReconnect=true&allowMultiQueries=true&serverTimezone=GMT%2B8
+        username: gobuy
+        password: gobuy
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
+    rabbitmq:
+        host: 192.168.22.141
+        username: gobuy
+        password: gobuy
+        virtual-host: /gobuy
+        template:
+            retry:
+                enabled: true
+                initial-interval: 10000ms
+                max-interval: 300000ms
+                multiplier: 2
+            exchange: gobuy.item.exchange
+        publisher-confirms: true
+
+    redis:
+        host: 192.168.22.137
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://127.0.0.1:10086/eureka
+        registry-fetch-interval-seconds: 10
+
+    instance:
+        lease-renewal-interval-in-seconds: 5    # 心跳时间
+        lease-expiration-duration-in-seconds: 15    # 过期时间
+
+
+gobuy:
+    jwt:
+        pubKeyPath: D:\\tmp\\rsa.pub
+        cookie-name: user-identity
+    worker:
+        workerId: 1
+        datacenterId: 1

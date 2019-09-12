@@ -33,6 +33,9 @@ zuul:
         api-cart:   # 购物车
             path: /cart/**
             serviceId: cart-service
+        api-order:   # 购物车
+            path: /order/**
+            serviceId: order-service
 
     retryable: true     # 重试
 
