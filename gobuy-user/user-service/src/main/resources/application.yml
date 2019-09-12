@@ -27,3 +27,9 @@ eureka:
 
 mybatis:
     type-aliases-package: com.gobuy.user.pojo
+
+
+gobuy:
+    jwt:
+        pubKeyPath: D:/tmp/rsa.pub     # 公钥地址
+        cookieName: user-identity    # cookie的名称

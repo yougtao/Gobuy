@@ -1,9 +1,9 @@
-package com.gobuy.cart.interceptor;
+package com.gobuy.user.interceptor;
 
 import com.gobuy.auth.entity.UserInfo;
 import com.gobuy.auth.utils.JwtUtils;
-import com.gobuy.cart.config.JwtProperties;
 import com.gobuy.common.utils.CookieUtils;
+import com.gobuy.user.config.JwtProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -40,7 +40,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             tl.set(user);
             return true;
         } catch (Exception e) {
-            // 抛出异常，证明未登录,返回401
+            // 抛出异常，证明未登录或超时,返回401
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             return false;
         }
