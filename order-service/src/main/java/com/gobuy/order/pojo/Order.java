@@ -22,14 +22,14 @@ public class Order {
 
     private Integer count;      // 商品数量
     @NotNull
-    private Long amount_total;  // 订单总价
+    private Long totalAmount;  // 订单总价
     @NotNull
-    private Long actualPay;     // 实付金额
+    private Long actualAmount;     // 应付金额
 
     @NotNull
     private Integer paymentChannel;    // 支付类型，1、在线支付，2、货到付款
     @NotNull
-    private String payNo;           // 支付流水号
+    private String paymentNo;           // 支付流水号
 
     private Integer receiverId;       // 收货地址信息id
     @Transient
@@ -50,7 +50,7 @@ public class Order {
     private Integer sourceType;     // 订单来源 1:app端，2：pc端，3：M端，4：微信端，5：手机qq端
 
     @Transient
-    private List<OrderGoods> goodsList;
+    private List<OrderGoods> orderDetails;
 
 
     public Long getId() {
@@ -101,20 +101,20 @@ public class Order {
         this.count = count;
     }
 
-    public Long getAmount_total() {
-        return amount_total;
+    public Long getTotalAmount() {
+        return totalAmount;
     }
 
-    public void setAmount_total(Long amount_total) {
-        this.amount_total = amount_total;
+    public void setTotalAmount(Long totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
-    public Long getActualPay() {
-        return actualPay;
+    public Long getActualAmount() {
+        return actualAmount;
     }
 
-    public void setActualPay(Long actualPay) {
-        this.actualPay = actualPay;
+    public void setActualAmount(Long actualAmount) {
+        this.actualAmount = actualAmount;
     }
 
     public Integer getPaymentChannel() {
@@ -125,12 +125,12 @@ public class Order {
         this.paymentChannel = paymentChannel;
     }
 
-    public String getPayNo() {
-        return payNo;
+    public String getPaymentNo() {
+        return paymentNo;
     }
 
-    public void setPayNo(String payNo) {
-        this.payNo = payNo;
+    public void setPaymentNo(String paymentNo) {
+        this.paymentNo = paymentNo;
     }
 
     public Integer getReceiverId() {
@@ -205,11 +205,11 @@ public class Order {
         this.sourceType = sourceType;
     }
 
-    public List<OrderGoods> getGoodsList() {
-        return goodsList;
+    public List<OrderGoods> getOrderDetails() {
+        return orderDetails;
     }
 
-    public void setGoodsList(List<OrderGoods> goodsList) {
-        this.goodsList = goodsList;
+    public void setOrderDetails(List<OrderGoods> orderDetails) {
+        this.orderDetails = orderDetails;
     }
 }

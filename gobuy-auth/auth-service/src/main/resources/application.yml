@@ -16,7 +16,7 @@ eureka:
 gobuy:
     auth-jwt:
         secret: login@Gobuy(Auth)78&*^31jflkJjfi&23%
-        pubKeyPath: D:\\tmp\\rsa.pub
+        pubKeyPath: D:/tmp/rsa.pub
         priKeyPath: D:\\tmp\\rsa.pri
         expire: 1440  # 过期时间
         cookie-name: user-identity

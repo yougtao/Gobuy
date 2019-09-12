@@ -45,17 +45,21 @@ public class OrderService {
         // 初始化数据
         order.setId(orderId);
         order.setMemberId(user.getId());
+        order.setSupplierId(0); // 商家id,暂时为0
         order.setOrderStatus(1);
         order.setCreateTime(new Timestamp(currentTimestamp));
+
+        // TODO 校验数据,待添加
+
         // 保存订单数据
         orderMapper.insertSelective(order);
 
         // 订单goods数据
-        order.getGoodsList().forEach(goods -> {
+        order.getOrderDetails().forEach(goods -> {
             goods.setOrderId(orderId);
         });
         // 保存
-        orderGoodsMapper.insertList(order.getGoodsList());
+        orderGoodsMapper.insertList(order.getOrderDetails());
 
 
         logger.debug("生成订单，订单编号：{}，用户id：{}", orderId, user.getId());
