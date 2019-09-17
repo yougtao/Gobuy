@@ -5,6 +5,8 @@ import com.gobuy.item.mapper.CategoryMapper;
 import com.gobuy.item.pojo.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,15 +20,13 @@ public class CategoryService {
 
     // 查询子分类
     public List<Category> queryByParentId(Integer id) {
-        Category category = new Category();
-        category.setParentId(id);
+        Example example = new Example(Category.class);
+        Example.Criteria criteria = example.createCriteria();
 
-        return categoryMapper.select(category);
-    }
+        criteria.andEqualTo("parentId", id);
+        example.setOrderByClause("sort");
 
-    public Boolean delete(int id) {
-        return categoryMapper.deleteByPrimaryKey(id) == 1;
-
+        return categoryMapper.selectByExample(example);
     }
 
     // 根据品牌ID查询
@@ -43,14 +43,30 @@ public class CategoryService {
         return lists;
     }
 
-    // 修改name
-    public Boolean edit(Integer id, String name) {
-        Category record = new Category();
-        record.setId(id);
-        record.setName(name);
 
-        categoryMapper.updateByPrimaryKeySelective(record);
+    // 增加category
+    public Integer add(Category category) {
+        category.setId(null);
+        if (categoryMapper.insert(category) == 1)
+            return category.getId();
+        return null;
+    }
+
+    // 修改name
+    public Boolean edit(Category category) {
+        return categoryMapper.updateByPrimaryKeySelective(category) == 1;
+    }
+
+    // 排序
+    @Transactional
+    public Boolean sort(List<Category> list) {
+        list.forEach(category -> categoryMapper.updateByPrimaryKeySelective(category));
         return true;
     }
+
+    public Boolean delete(int id) {
+        return categoryMapper.deleteByPrimaryKey(id) == 1;
+    }
+
 
 }// end
