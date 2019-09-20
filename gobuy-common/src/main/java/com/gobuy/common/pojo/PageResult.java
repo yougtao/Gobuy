@@ -12,7 +12,7 @@ public class PageResult<T> {
 
     public PageResult(com.github.pagehelper.Page<T> pageInfo) {
         this.total = pageInfo.getTotal();
-        this.totalPage = pageInfo.getPageSize();
+        this.totalPage = pageInfo.getPages();
         this.items = pageInfo.getResult();
     }
 

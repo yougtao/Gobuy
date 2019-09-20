@@ -27,7 +27,7 @@ public class BrandController {
     @GetMapping("page")
     public ResponseEntity<PageResult<Brand>> queryBrandByPage(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
-            @RequestParam(value = "rows", defaultValue = "5") Integer rows,
+            @RequestParam(value = "rows", defaultValue = "10") Integer rows,
             @RequestParam(value = "sortBy", required = false) String sortBy,
             @RequestParam(value = "desc", defaultValue = "false") Boolean desc,
             @RequestParam(value = "key", required = false) String key) {
@@ -77,7 +77,7 @@ public class BrandController {
      * 添加品牌
      * */
     @PostMapping
-    public ResponseEntity<Boolean> addBrand(Brand brand, @RequestParam("categories") List<Integer> cids) {
+    public ResponseEntity<Boolean> addBrand(Brand brand, @RequestParam(value = "categories", required = false) List<Integer> cids) {
         Boolean bool = brandService.saveBrand(brand, cids);
         return ResponseEntity.ok(bool);
     }
@@ -87,7 +87,7 @@ public class BrandController {
      * 编辑保存品牌
      * */
     @PutMapping
-    public ResponseEntity<Boolean> editBrand(Brand brand, @RequestParam("categories") List<Integer> cids) {
+    public ResponseEntity<Boolean> editBrand(Brand brand, @RequestParam(value = "categories", required = false) List<Integer> cids) {
         Boolean bool = brandService.updateBrand(brand, cids);
         return ResponseEntity.ok(bool);
     }

@@ -30,8 +30,8 @@ public class BrandService {
         // 分页
         PageHelper.startPage(page, rows);
 
-        // 过滤
         Example example = new Example(Brand.class);
+        // 过滤
         if (StringUtils.isNotBlank(key)) {
             example.createCriteria().andLike("name", "%" + key + "%").orEqualTo("letter", key);
         }
@@ -66,8 +66,12 @@ public class BrandService {
     //保存Brand
     @Transactional
     public Boolean saveBrand(Brand brand, List<Integer> cids) {
+        brand.setId(null);
         if (brandMapper.insertSelective(brand) != 1)
             return false;
+
+        if (cids == null)
+            return true;
 
         for (Integer cid : cids)
             brandMapper.insertCategoryAndBrand(cid, brand.getId());
@@ -79,6 +83,10 @@ public class BrandService {
     public Boolean updateBrand(Brand brand, List<Integer> cids) {
         // 先更新brand信息
         brandMapper.updateByPrimaryKeySelective(brand);
+
+        if (cids == null)
+            return true;
+
         // 查询原先 牌子的类目
         List<Integer> oldCategory = brandMapper.queryCategory(brand.getId());
 

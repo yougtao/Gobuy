@@ -44,14 +44,14 @@ public class CategoryController {
 
 
     @PostMapping
-    public ResponseEntity<Integer> addCategory(@RequestBody Category category) {
+    public ResponseEntity<Integer> addCategory(Category category) {
         Integer id = categoryService.add(category);
         return ResponseEntity.ok(id);
     }
 
 
     @PutMapping
-    public ResponseEntity<Boolean> editCategory(@RequestBody Category category) {
+    public ResponseEntity<Boolean> editCategory(Category category) {
         Boolean bool = categoryService.edit(category);
         if (bool != null && bool)
             return ResponseEntity.ok(true);
@@ -59,7 +59,7 @@ public class CategoryController {
     }
 
     @PutMapping("sort")
-    public ResponseEntity<Boolean> sortCategory(@RequestBody List<Category> list) {
+    public ResponseEntity<Boolean> sortCategory(@RequestParam List<Category> list) {
         Boolean bool = categoryService.sort(list);
         if (bool != null && bool)
             return ResponseEntity.ok(true);

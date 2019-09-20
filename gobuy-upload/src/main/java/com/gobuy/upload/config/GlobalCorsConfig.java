@@ -16,6 +16,7 @@ public class GlobalCorsConfig {
 
         // 允许的域
         config.addAllowedOrigin("http://manage.gobuy.com");
+        config.addAllowedOrigin("http://test.gobuy.com");
         config.addAllowedOrigin("http://www.gobuy.com");
         // 是否发送Cookie信息
         config.setAllowCredentials(true);
