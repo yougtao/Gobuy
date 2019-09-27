@@ -83,16 +83,17 @@ public class SearchService {
 
         // 处理规格参数
         new TypeReference<List<Map<String, Object>>>() {};
-        Map<String, List<Map<String, Object>>> spuSpecs = mapper.readValue(spuDetail.getSpecifications(), new TypeReference<Map<String, List<Map<String, Object>>>>() {});
-        // Map<String, List<Object>> specialSpecs = mapper.readValue(spuDetail.getSpecTemplate(), new TypeReference<Map<String, List<Object>>>() {});
+        //Map<String, List<Map<String, Object>>> spuSpecs = mapper.readValue(spuDetail.getSpecifications(), new TypeReference<Map<String, List<Map<String, Object>>>>() {});
+        // 简介方式
+        List<Map<String, Object>> spuSpecs = mapper.readValue(spuDetail.getSpecifications(), new TypeReference<List<Map<String, Object>>>() {});
 
         // 过滤规格模板，把所有可搜索的信息保存到Map中
         Map<String, Object> specMap = new HashMap<>();
         // 新的遍历
-        for (Map.Entry<String, List<Map<String, Object>>> entry : spuSpecs.entrySet()) {
-            // String groupName = entry.getKey();   // 暂时用不到
-            List<Map<String, Object>> list = entry.getValue();
-            list.forEach(spec -> {
+        spuSpecs.forEach(u -> {
+            String groupName = (String) u.get("group");
+            List<Map<String, Object>> params = (List<Map<String, Object>>) u.get("params");
+            params.forEach(spec -> {
                 if (!(Boolean) spec.get("searchable"))
                     return;
                 if ((Boolean) spec.get("global"))
@@ -100,7 +101,20 @@ public class SearchService {
                 else
                     specMap.put((String) spec.get("k"), spec.get("options"));
             });
-        }
+        });
+
+        /*for (Map.Entry<String, List<Map<String, Object>>> entry : spuSpecs.entrySet()) {
+            // String groupName = entry.getKey();   // 暂时用不到
+            List<Map<String, Object>> specList = entry.getValue();
+            specList.forEach(spec -> {
+                if (!(Boolean) spec.get("searchable"))
+                    return;
+                if ((Boolean) spec.get("global"))
+                    specMap.put((String) spec.get("k"), spec.get("v"));
+                else
+                    specMap.put((String) spec.get("k"), spec.get("options"));
+            });
+        }*/
 
         // 设置数据
         goods.setId(spu.getId());
@@ -127,6 +141,7 @@ public class SearchService {
         if (StringUtils.isBlank(key))
             return null;
 
+        // 构建查询条件
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
 
         // 对key进行全文检索
@@ -192,7 +207,6 @@ public class SearchService {
 
     // 解析品牌聚合结果
     private List<Brand> getBrandAggResult(Aggregation aggregation) {
-        //List<Brand> brands = new ArrayList<>();
         LongTerms brandAgg = (LongTerms) aggregation;
         List<Integer> bids = new ArrayList<>();
 
@@ -200,7 +214,10 @@ public class SearchService {
             bids.add(bucket.getKeyAsNumber().intValue());
         }
 
-        return brandClient.queryBrandByIds(bids);
+        if (bids.isEmpty())
+            return new ArrayList<>();
+        else
+            return brandClient.queryBrandByIds(bids);
     }
 
 }// end

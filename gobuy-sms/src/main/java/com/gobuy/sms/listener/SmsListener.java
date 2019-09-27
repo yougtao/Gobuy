@@ -31,7 +31,6 @@ public class SmsListener {
             exchange = @Exchange(value = "gobuy.sms.exchange", ignoreDeclarationExceptions = "true", type = ExchangeTypes.TOPIC),
             key = {"VerifyCode"}
     ))
-
     public void sendSms(Map<String, String> msg) {
 
         if (msg == null || msg.size() == 0)
